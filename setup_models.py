@@ -24,7 +24,7 @@ def download_pyannote(hf_token: str):
     snapshot_download(
     repo_id="pyannote/segmentation-3.0",
     token=hf_token,
-    cache_dir=str(PYANNOTE_DIR),
+    cache_dir=str(PYANNOTE_DIR / "hub"),
     ignore_patterns=skip
 )
     print("      Complete.")
@@ -33,7 +33,7 @@ def download_pyannote(hf_token: str):
     snapshot_download(
     repo_id="pyannote/speaker-diarization-3.1",
     token=hf_token,
-    cache_dir=str(PYANNOTE_DIR),
+    cache_dir=str(PYANNOTE_DIR / "hub"),
     ignore_patterns=skip
 )
     print("      Complete.")
