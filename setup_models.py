@@ -7,7 +7,6 @@ The HF token is used only during this download and never stored.
 
 import os
 import sys
-import getpass
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -67,7 +66,7 @@ def main():
     for d in [MODELS_DIR, WHISPER_DIR, PYANNOTE_DIR]:
         d.mkdir(parents=True, exist_ok=True)
 
-    hf_token = getpass.getpass("Hugging Face token (input hidden): ").strip()
+    hf_token = input("Hugging Face token: ").strip()
 
     if not hf_token.startswith("hf_"):
         print("\nERROR: Token must start with 'hf_'. Check and retry.")
