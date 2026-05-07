@@ -22,20 +22,20 @@ def download_pyannote(hf_token: str):
 
     print("\n[1/5] Downloading pyannote/segmentation-3.0...")
     snapshot_download(
-        repo_id="pyannote/segmentation-3.0",
-        token=hf_token,
-        local_dir=str(PYANNOTE_DIR / "segmentation-3.0"),
-        ignore_patterns=skip
-    )
+    repo_id="pyannote/segmentation-3.0",
+    token=hf_token,
+    cache_dir=str(PYANNOTE_DIR),
+    ignore_patterns=skip
+)
     print("      Complete.")
 
     print("\n[2/5] Downloading pyannote/speaker-diarization-3.1...")
     snapshot_download(
-        repo_id="pyannote/speaker-diarization-3.1",
-        token=hf_token,
-        local_dir=str(PYANNOTE_DIR / "speaker-diarization-3.1"),
-        ignore_patterns=skip
-    )
+    repo_id="pyannote/speaker-diarization-3.1",
+    token=hf_token,
+    cache_dir=str(PYANNOTE_DIR),
+    ignore_patterns=skip
+)
     print("      Complete.")
 
 
