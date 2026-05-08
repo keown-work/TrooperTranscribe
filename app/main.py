@@ -10,8 +10,13 @@ import tempfile
 import uuid
 from pathlib import Path
 
-# Enforce offline mode before any HuggingFace imports
-os.environ["HF_HUB_OFFLINE"] = "1"
+# Resolve models path first
+_default_models = Path(__file__).parent.parent / "models"
+MODELS_PATH = Path(os.environ.get("KSP_MODELS_PATH", str(_default_models)))
+
+# Set HuggingFace environment BEFORE any HF imports
+os.environ["HF_HOME"]             = str(MODELS_PATH / "pyannote")
+os.environ["HF_HUB_OFFLINE"]      = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
 from fastapi import FastAPI, UploadFile, File, BackgroundTasks, HTTPException
@@ -27,7 +32,6 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 # Resolve models path from environment (set by launch.bat) or fallback to repo models dir
 _default_models = Path(__file__).parent.parent / "models"
-MODELS_PATH = Path(os.environ.get("KSP_MODELS_PATH", str(_default_models)))
 
 # In-memory job store (single-file v1)
 jobs: dict = {}
