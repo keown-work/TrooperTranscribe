@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Casey Keown. All rights reserved. Proprietary and confidential.
+
 """
 Export transcript segments to TXT, DOCX, PDF, SRT, VTT, and CSV.
 """

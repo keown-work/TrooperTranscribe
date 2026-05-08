@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════
-   KSPTranscribe — Kentucky State Police
+   Trooper Transcribe™
+   Copyright (c) 2026 Casey Keown. All rights reserved.
    Design: Institutional dark / command center aesthetic
    ═══════════════════════════════════════════════════════════ */
-
 :root {
   --bg:          #0c0c0e;
   --surface-1:   #141416;
@@ -699,3 +699,30 @@ a { color: var(--gold); }
 
 /* Focus visible */
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════ */
+.site-footer {
+  background: var(--surface-1);
+  border-top: 1px solid var(--border);
+  padding: 20px 28px;
+  margin-top: auto;
+}
+.footer-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.footer-copy {
+  font-size: 0.78rem;
+  color: var(--gray-hi);
+}
+.footer-legal {
+  font-size: 0.7rem;
+  color: var(--gray-dim);
+  line-height: 1.5;
+  max-width: 900px;
+}

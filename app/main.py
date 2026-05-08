@@ -1,5 +1,7 @@
+# Copyright (c) 2026 Casey Keown. All rights reserved. Proprietary and confidential.
+
 """
-KSPTranscribe - Kentucky State Police
+Trooper Transcribe™
 Portable offline transcription tool.
 All processing is local. No data leaves this machine.
 """

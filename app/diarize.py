@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Casey Keown. All rights reserved. Proprietary and confidential.
+
 """
 Speaker diarization using pyannote.audio 4.x.
 Runs fully offline using locally cached models.

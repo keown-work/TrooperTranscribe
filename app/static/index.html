@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KSPTranscribe — Kentucky State Police</title>
+  <title>Trooper Transcribe</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
@@ -16,15 +16,15 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="header-brand">
-        <img src="/static/ksp-logo.png" alt="KSP" class="header-logo" onerror="this.style.display='none'" />
+        <img src="/static/TprScribe-logo.png" alt="Trooper Transcribe" class="header-logo" onerror="this.style.display='none'" />
         <div class="header-titles">
-          <span class="header-agency">KENTUCKY STATE POLICE</span>
-          <span class="header-tool">TRANSCRIBE</span>
+          <span class="header-agency">TROOPER</span>
+          <span class="header-tool">TRANSCRIBE™</span>
         </div>
       </div>
       <div class="header-meta">
-        <div class="tagline">The Thin Gray Line</div>
-        <div class="est">Established 1948</div>
+        <div class="tagline">REPORTS AT THE SPEED OF SOUND</div>
+        <div class="est">Established 2026</div>
         <div id="hw-badge" class="hw-badge hw-loading">Detecting hardware...</div>
       </div>
     </div>
@@ -164,7 +164,6 @@
 
       <div class="editor-body">
 
-        <!-- Left: speaker legend + controls -->
         <aside class="editor-aside">
           <div class="aside-section">
             <h3 class="aside-title">Speakers</h3>
@@ -197,7 +196,6 @@
           </div>
         </aside>
 
-        <!-- Right: transcript -->
         <div class="transcript-wrap">
           <div id="transcript" class="transcript"></div>
         </div>
@@ -206,6 +204,18 @@
     </section>
 
   </main>
+
+  <!-- ═══════════════════════════════════════════ FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-copy">
+        &copy; <span id="footer-year"></span> Casey Keown. Trooper Transcribe&trade; is a trademark of Casey Keown. All Rights Reserved.
+      </p>
+      <p class="footer-legal">
+        All content included in this application, including text, graphics, logos, images, audio processing software, and compilations, is the property of Casey Keown and is protected by United States and international copyright laws. The trademarks Trooper Transcribe&trade; and Tpr Scribe&trade; may not be used in connection with any product or service not provided by Casey Keown.
+      </p>
+    </div>
+  </footer>
 
   <!-- ═══════════════════════════════════════════ RENAME DIALOG -->
   <div id="rename-overlay" class="overlay hidden">
@@ -221,5 +231,8 @@
   </div>
 
   <script src="/static/app.js"></script>
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
