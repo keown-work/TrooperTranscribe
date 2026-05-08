@@ -11,19 +11,20 @@ import sys
 import tempfile
 import uuid
 from pathlib import Path
+from typing import Optional
 
 # Resolve models path first
 _default_models = Path(__file__).parent.parent / "models"
 MODELS_PATH = Path(os.environ.get("KSP_MODELS_PATH", str(_default_models)))
 
 # Set HuggingFace environment BEFORE any HF imports
-os.environ["HF_HOME"]             = str(MODELS_PATH / "pyannote")
-os.environ["HF_HUB_OFFLINE"]      = "1"
-os.environ["TRANSFORMERS_OFFLINE"] = "1"
+os.environ["HF_HOME"] = str(MODELS_PATH / "pyannote")
+os.environ["HF_HUB_OFFLINE"] = "0"
+os.environ["TRANSFORMERS_OFFLINE"] = "0"
 
 from fastapi import FastAPI, UploadFile, File, BackgroundTasks, HTTPException
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, Response, JSONResponse
+from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel
 import torch
 
@@ -32,12 +33,8 @@ app = FastAPI(title="KSPTranscribe", docs_url=None, redoc_url=None)
 STATIC_DIR = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-# Resolve models path from environment (set by launch.bat) or fallback to repo models dir
-_default_models = Path(__file__).parent.parent / "models"
-
-# In-memory job store (single-file v1)
+# In-memory job store
 jobs: dict = {}
-
 
 # ---------------------------------------------------------------------------
 # Routes
@@ -70,6 +67,7 @@ async def start_transcription(
     job_id = str(uuid.uuid4())
     suffix = Path(file.filename).suffix or ".tmp"
 
+    # Save uploaded file to a temporary location
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
     tmp.write(await file.read())
     tmp.close()
@@ -113,6 +111,7 @@ async def export_transcript(fmt: str, req: ExportRequest):
         data, mime, ext = do_export(req.segments, fmt, req.filename)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
     safe_name = req.filename.replace('"', "")
     return Response(
         content=data,
@@ -138,6 +137,7 @@ def run_pipeline(job_id: str, audio_path: str, model_name: str, num_speakers: st
 
         _set_progress(job_id, 5, "Loading transcription model...")
 
+        # 1. Whisper Transcription
         segments = transcribe_audio(
             audio_path=audio_path,
             model_name=model_name,
@@ -145,8 +145,9 @@ def run_pipeline(job_id: str, audio_path: str, model_name: str, num_speakers: st
             progress_callback=lambda p, m: _set_progress(job_id, p, m),
         )
 
-        _set_progress(job_id, 68, "Running speaker diarization...")
+        _set_progress(job_id, 70, "Running speaker diarization...")
 
+        # 2. Pyannote Diarization
         n_speakers = None if num_speakers == "auto" else int(num_speakers)
         diarization = diarize_audio(
             audio_path=audio_path,
@@ -154,8 +155,9 @@ def run_pipeline(job_id: str, audio_path: str, model_name: str, num_speakers: st
             num_speakers=n_speakers,
         )
 
-        _set_progress(job_id, 92, "Merging transcript with speakers...")
+        _set_progress(job_id, 90, "Merging transcript with speakers...")
 
+        # 3. Merging
         result = merge_transcript_diarization(segments, diarization)
 
         jobs[job_id]["status"] = "complete"
@@ -168,9 +170,12 @@ def run_pipeline(job_id: str, audio_path: str, model_name: str, num_speakers: st
         jobs[job_id]["status"] = "error"
         jobs[job_id]["error"] = str(exc)
         jobs[job_id]["detail"] = traceback.format_exc()
+        print(f"Error in job {job_id}: {traceback.format_exc()}")
 
     finally:
+        # Cleanup temporary audio file
         try:
-            os.unlink(audio_path)
+            if os.path.exists(audio_path):
+                os.unlink(audio_path)
         except OSError:
             pass

@@ -23,22 +23,28 @@ def transcribe_audio(
 
     cuda = torch.cuda.is_available()
     device = "cuda" if cuda else "cpu"
-    compute_type = "float16" if cuda else "int8"
+    
+    # FIX: Using 'float16' on some mobile GPUs can cause errors. 
+    # 'int8_float16' is the sweet spot for speed and stability on portable hardware.
+    compute_type = "int8_float16" if cuda else "int8"
+    
     whisper_cache = str(models_path / "whisper")
 
     if progress_callback:
         mode_label = "GPU" if cuda else "CPU"
         progress_callback(8, f"Loading {model_name} ({mode_label})...")
 
+    # FIX: Added local_files_only=True to ensure it never tries to use the internet
     model = WhisperModel(
         model_name,
         device=device,
         compute_type=compute_type,
         download_root=whisper_cache,
+        local_files_only=True 
     )
 
     if progress_callback:
-        progress_callback(18, "Transcribing audio...")
+        progress_callback(18, "Analyzing audio waveform...")
 
     segments_gen, info = model.transcribe(
         audio_path,
@@ -51,6 +57,10 @@ def transcribe_audio(
     total_duration = max(info.duration, 1)
 
     for seg in segments_gen:
+        # Filter out empty segments
+        if not seg.text.strip():
+            continue
+            
         segments.append(
             {
                 "start": round(seg.start, 3),
@@ -59,6 +69,7 @@ def transcribe_audio(
             }
         )
         if progress_callback:
+            # Scale progress between 18% and 66% (leaving room for diarization)
             pct = 18 + int((seg.end / total_duration) * 48)
             elapsed = int(seg.end)
             total = int(total_duration)

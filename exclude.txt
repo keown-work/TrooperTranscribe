@@ -1,0 +1,5 @@
+.git
+__pycache__
+test_diarize.py
+make_favicon.py
+get-pip.py

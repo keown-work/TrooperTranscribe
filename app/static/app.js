@@ -1,6 +1,6 @@
 /**
- * KSPTranscribe — Frontend Application
- * Kentucky State Police
+ * Trooper Transcribe&trade; — Frontend Application
+ * &copy; Casey Keown 2026
  */
 
 // ═══════════════════════════════════════════════════════════

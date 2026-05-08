@@ -11,6 +11,9 @@ echo.
 :: Change to the directory containing this batch file
 cd /d "%~dp0"
 
+:: Set PYTHONPATH so python can always find the 'app' folder
+set "PYTHONPATH=%~dp0"
+
 :: ── Python detection ────────────────────────────────────────
 set "PORTABLE_PYTHON=%~dp0python\python.exe"
 if exist "%PORTABLE_PYTHON%" (
@@ -25,9 +28,6 @@ if exist "%PORTABLE_PYTHON%" (
 if %errorlevel% neq 0 (
     echo.
     echo ERROR: Python not found.
-    echo Install Python 3.11+ from https://www.python.org/downloads/
-    echo Make sure "Add to PATH" is checked during installation.
-    echo.
     pause
     exit /b 1
 )
@@ -39,50 +39,42 @@ set "CACHE_MODELS=%CACHE_ROOT%\models"
 
 if not exist "%CACHE_ROOT%" mkdir "%CACHE_ROOT%" 2>nul
 
-if not exist "%CACHE_MODELS%\whisper" (
-    if exist "%USB_MODELS%\whisper" (
-        echo First run on this machine. Copying models to local cache...
-        echo This takes a few minutes but only happens once per machine.
-        xcopy /E /I /Q "%USB_MODELS%" "%CACHE_MODELS%" >nul 2>&1
+:: Check if cache is empty. If so, copy from USB.
+if not exist "%CACHE_MODELS%" (
+    if exist "%USB_MODELS%" (
+        echo Dispatch, show this unit 10-8. We're going to be 10-6 for a few
+        echo minutes... copying models to the local cache. This is a one-time
+        echo deployment. Hang tight for me.
+        echo.
+        xcopy /E /I /y /Q "%USB_MODELS%" "%CACHE_MODELS%" >nul 2>&1
         if %errorlevel% equ 0 (
-            echo Models cached to %CACHE_MODELS%
+            echo Dispatch, we'll be 98 from setup, everything is 10-2.
         ) else (
             echo WARNING: Could not copy models. Loading from USB drive.
             set "CACHE_MODELS=%USB_MODELS%"
         )
     ) else (
-        set "CACHE_MODELS=%USB_MODELS%"
+        echo ERROR: Models directory not found on USB!
+        pause
+        exit /b 1
     )
 )
 
+:: Direct the app and HuggingFace to look at the local cache
 set "KSP_MODELS_PATH=%CACHE_MODELS%"
+set "HF_HOME=%CACHE_MODELS%"
 set "HF_HUB_OFFLINE=1"
 set "TRANSFORMERS_OFFLINE=1"
 echo Models path: %KSP_MODELS_PATH%
 echo.
 
 :: ── Dependency check ─────────────────────────────────────────
-:: Check each package individually to avoid pyannote import-time warnings
-:: triggering a false failure on the combined import check.
 set "DEPS_OK=1"
-
-"%PYTHON%" -c "import fastapi" >nul 2>&1
-if %errorlevel% neq 0 set "DEPS_OK=0"
-
-"%PYTHON%" -c "import faster_whisper" >nul 2>&1
-if %errorlevel% neq 0 set "DEPS_OK=0"
-
-"%PYTHON%" -c "import uvicorn" >nul 2>&1
-if %errorlevel% neq 0 set "DEPS_OK=0"
-
-"%PYTHON%" -c "import docx" >nul 2>&1
-if %errorlevel% neq 0 set "DEPS_OK=0"
-
-"%PYTHON%" -c "import reportlab" >nul 2>&1
+"%PYTHON%" -c "import fastapi, faster_whisper, uvicorn, docx, reportlab" >nul 2>&1
 if %errorlevel% neq 0 set "DEPS_OK=0"
 
 if "%DEPS_OK%"=="0" (
-    echo Dependencies not installed. Installing now...
+    echo Dependencies missing. Installing to portable environment...
     "%PYTHON%" -m pip install -r requirements.txt --quiet
     if %errorlevel% neq 0 (
         echo ERROR: Failed to install dependencies.
@@ -99,7 +91,7 @@ echo.
 echo Press Ctrl+C to stop the server.
 echo.
 
-start "" cmd /c "timeout /t 2 >nul 2>&1 && start http://localhost:8765"
+start "" cmd /c "timeout /t 3 >nul 2>&1 && start http://localhost:8765"
 "%PYTHON%" -m uvicorn app.main:app --host 127.0.0.1 --port 8765
 
 echo.
