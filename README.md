@@ -1,8 +1,8 @@
-\# KSPTranscribe
+\# TrooperTranscribe
 
 
 
-Portable, offline audio transcription tool for Kentucky State Police investigators.
+Portable, offline audio transcription tool for Police investigators.
 
 Runs from USB. No installation required on deployment machines.
 
@@ -24,7 +24,7 @@ Runs from USB. No installation required on deployment machines.
 
 1\. Run `setup\_models.bat` and enter your HF token when prompted.
 
-2\. Upload KSP branding assets to `/branding/`.
+2\. Upload branding assets to `/branding/`.
 
 3\. Proceed with USB packaging phase.
 
@@ -34,7 +34,7 @@ Runs from USB. No installation required on deployment machines.
 
 Run `launch.bat` from the USB drive. No installation required.
 
-Compatible with Dell Latitude 5430 (CPU) and Dell Precision 3591 (GPU).
+Compatible with (CPU) and (GPU) computers.
 
 
 
