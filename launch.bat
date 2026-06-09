@@ -3,8 +3,8 @@
 setlocal enabledelayedexpansion
 echo.
 echo  ============================================================
-echo   TROOPER TRANSCRIBE
-echo   Reports at the Speed of Sound  ^|  Established 2026
+echo   TROOPER TRANSCRIBE™
+echo   Reports at the Speed of Sound  |  Established 2026
 echo  ============================================================
 echo.
 
