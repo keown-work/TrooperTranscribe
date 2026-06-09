@@ -1,6 +1,6 @@
 
 """
-KSPTranscribe - One-time model setup script.
+TrooperTranscribe™ - One-time model setup script.
 Run via setup_models.bat on the build machine.
 The HF token is used only during this download and never stored.
 """
@@ -58,7 +58,7 @@ def download_whisper():
 
 def main():
     print("=" * 60)
-    print("  KSPTranscribe - Model Setup")
+    print("  TrooperTranscribe™ - Model Setup")
     print("=" * 60)
     print("\nAll processing is local. Your HF token is used only")
     print("for this download and is never written to disk.\n")
@@ -84,7 +84,7 @@ def main():
 
     print("\n" + "=" * 60)
     print("  All models downloaded successfully.")
-    print("  Upload your KSP branding assets to /branding/")
+    print("  Upload your TrooperTranscribe™ branding assets to /branding/")
     print("  then return for the next build phase.")
     print("=" * 60)
 
