@@ -44,7 +44,7 @@ def diarize_audio(audio_path: str, models_path: Path, num_speakers: Optional[int
         # Note: Replace 'YOUR_HF_TOKEN_HERE' with your actual token
         pipeline = Pipeline.from_pretrained(
             "pyannote/speaker-diarization-3.1", 
-            use_auth_token="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"
+            use_auth_token="YOUR_HF_TOKEN_HERE"
         )
         pipeline.to(device)
 
