@@ -1,7 +1,7 @@
 
 @echo off
 echo ============================================================
-echo   KSPTranscribe - Model Setup
+echo   TrooperTranscribe™ - Model Setup
 echo ============================================================
 echo.
 python --version >nul 2>&1
