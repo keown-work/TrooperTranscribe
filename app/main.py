@@ -28,7 +28,7 @@ from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel
 import torch
 
-app = FastAPI(title="KSPTranscribe", docs_url=None, redoc_url=None)
+app = FastAPI(title="TrooperTranscribe™", docs_url=None, redoc_url=None)
 
 STATIC_DIR = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
